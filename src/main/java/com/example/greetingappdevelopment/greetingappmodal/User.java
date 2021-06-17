@@ -1,6 +1,7 @@
 package com.example.greetingappdevelopment.greetingappmodal;
 
 public class User {
+
     String firstName;
     String lastName;
 

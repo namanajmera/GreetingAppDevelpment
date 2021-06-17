@@ -1,24 +1,28 @@
 package com.example.greetingappdevelopment.controller;
 
+import com.example.greetingappdevelopment.greetingappconfigure.GreetingConfigure;
 import com.example.greetingappdevelopment.greetingappmodal.Greeting;
 import com.example.greetingappdevelopment.greetingappmodal.User;
 import com.example.greetingappdevelopment.greetingappservice.IGreetingService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.concurrent.atomic.AtomicLong;
+import javax.validation.Valid;
+
 
 @RequestMapping("/greeting")
 public class GreetingController {
-    private static final String template = "Hello, %s!";
-    private final AtomicLong counter = new AtomicLong();
 
     @Autowired
     private IGreetingService greetingService;
 
-    @GetMapping("/get/greeting")
-    public Greeting greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
-        return new Greeting(counter.incrementAndGet(), String.format(template, name));
+    @RequestMapping("/get")
+    public String greetingMessage() {
+        return greetingService.getMessage();
     }
 
     @PostMapping("/post")
@@ -26,4 +30,9 @@ public class GreetingController {
         return greetingService.getMessage(user);
     }
 
+    @PostMapping("/save")
+    public ResponseEntity<Greeting> saveGreeting(@Valid @RequestBody GreetingConfigure greetingconfig) {
+        Greeting greeting = greetingService.saveGreeting(greetingconfig);
+        return new ResponseEntity<>(greeting, HttpStatus.OK);
+    }
 }

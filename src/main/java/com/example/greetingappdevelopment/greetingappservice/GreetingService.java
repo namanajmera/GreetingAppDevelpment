@@ -1,7 +1,10 @@
 package com.example.greetingappdevelopment.greetingappservice;
 
+import com.example.greetingappdevelopment.greetingappconfigure.GreetingConfigure;
 import com.example.greetingappdevelopment.greetingappmodal.Greeting;
 import com.example.greetingappdevelopment.greetingappmodal.User;
+import com.example.greetingappdevelopment.greetingapprepo.IGreetingsRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,4 +28,15 @@ public class GreetingService implements IGreetingService {
             return "Hello " + user.getFirstName() + " " + user.getLastName() + "!";
         }
     }
+
+    @Autowired
+    IGreetingsRepository greetingrepository;
+
+    @Override
+    public Greeting saveGreeting(GreetingConfigure greetingconfig) {
+        Greeting greeting = new Greeting(greetingconfig);
+        greeting = greetingrepository.save(greeting);
+        return greeting;
+    }
+
 }
