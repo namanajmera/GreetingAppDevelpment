@@ -2,12 +2,13 @@ package com.example.greetingappdevelopment.greetingappmodal;
 
 public class Greeting {
     private long id;
-    private String greeting;
 
-    public Greeting(long id, String greeting) {
+    private String msg;
+
+    public Greeting(long id, String msg) {
         super();
         this.id = id;
-        this.greeting = greeting;
+        this.msg = msg;
     }
 
     public long getId() {
@@ -18,11 +19,11 @@ public class Greeting {
         this.id = id;
     }
 
-    public String getGreeting() {
-        return greeting;
+    public String getMessage() {
+        return msg;
     }
 
-    public void setGreeting(String greeting) {
-        this.greeting = greeting;
+    public void setMessage(String msg) {
+        this.msg = msg;
     }
 }
