@@ -7,41 +7,24 @@ import com.example.greetingappdevelopment.greetingapprepo.IGreetingsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
-public class GreetingService implements IGreetingService {
-    @Override
-    public String getMessage() {
-        return "Hello World!!";
-    }
+import java.util.concurrent.atomic.AtomicLong;
 
-    @Override
-    public String getMessage(User user) {
-        if (user == null) {
-            return "Hello World";
-        } else if (user.getFirstName() == null) {
-            user.setFirstName("");
-            return "Hello " + user.getLastName();
-        } else if (user.getLastName() == null) {
-            user.setLastName("");
-            return "Hello " + user.getFirstName();
-        } else {
-            return "Hello " + user.getFirstName() + " " + user.getLastName() + "!";
-        }
-    }
+@Service
+public class GreetingService implements IGreetingService{
+    private static final String template = "Hello, %s!";
+    private final AtomicLong counter = new AtomicLong();
 
     @Autowired
-    IGreetingsRepository greetingrepository;
+    private IGreetingsRepository greetingRepository;
 
     @Override
-    public Greeting saveGreeting(GreetingConfigure greetingconfig) {
-        Greeting greeting = new Greeting(greetingconfig);
-        greeting = greetingrepository.save(greeting);
-        return greeting;
+    public Greeting addGreeting(User user) {
+        String message = String.format(template, (user.toString().isEmpty()) ? "World" : user.toString());
+        return greetingRepository.save(new Greeting(counter.incrementAndGet(), message));
     }
 
     @Override
-    public Greeting getGreeting(Long id) {
-        return greetingrepository.findById(id).orElseGet(null);
+    public Greeting getGreetingById(long id) {
+        return greetingRepository.findById(id).get();
     }
-
 }

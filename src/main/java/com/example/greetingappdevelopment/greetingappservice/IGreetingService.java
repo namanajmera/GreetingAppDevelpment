@@ -5,13 +5,7 @@ import com.example.greetingappdevelopment.greetingappmodal.Greeting;
 import com.example.greetingappdevelopment.greetingappmodal.User;
 
 public interface IGreetingService {
+    Greeting addGreeting(User user);
 
-    String getMessage();
-
-    String getMessage(User user);
-
-    Greeting saveGreeting(GreetingConfigure greetingconfig);
-
-    Greeting getGreeting(Long id);
-
+    Greeting getGreetingById(long id);
 }

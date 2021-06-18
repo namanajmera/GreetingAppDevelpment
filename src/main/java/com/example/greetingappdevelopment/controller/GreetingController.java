@@ -12,31 +12,37 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 
+@RestController
 @RequestMapping("/greeting")
 public class GreetingController {
+    private static final String template = "Hello, %s!";
 
     @Autowired
     private IGreetingService greetingService;
 
-    @RequestMapping("/get")
-    public String greetingMessage() {
-        return greetingService.getMessage();
+    @GetMapping(value = { "", "/", "/home" })
+    public Greeting getGreeting(@RequestParam(value = "fName", defaultValue = "") String firstName,
+                                @RequestParam(value = "lName", defaultValue = "") String lastName) {
+        User user = new User();
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        return greetingService.addGreeting(user);
+    }
+
+    @GetMapping(value = { "/{id}", "/home/{id}" })
+    public Greeting getGreeting(@PathVariable long id) {
+        return greetingService.getGreetingById(id);
     }
 
     @PostMapping("/post")
-    public String greetUser(@RequestBody User user) {
-        return greetingService.getMessage(user);
+    public String getGreeting(@RequestBody Greeting greeting) {
+        return "{\"id\":" + greeting.getId() + ",\"message\":" + "\"" + String.format(template, greeting.getMessage())
+                + "\"}";
     }
 
-    @PostMapping("/save")
-    public ResponseEntity<Greeting> saveGreeting(@Valid @RequestBody GreetingConfigure greetingconfig) {
-        Greeting greeting = greetingService.saveGreeting(greetingconfig);
-        return new ResponseEntity<>(greeting, HttpStatus.OK);
-    }
-
-    @GetMapping("/get/{id}")
-    public ResponseEntity<Greeting> getGreeting(@PathVariable Long id) {
-        Greeting greeting = greetingService.getGreeting(id);
-        return new ResponseEntity<>(greeting, HttpStatus.OK);
+    @PutMapping("/put/{id}")
+    public Greeting getGreeting(@PathVariable long id,
+                                @RequestParam(value = "name", defaultValue = "World") String name) {
+        return new Greeting(id, String.format(template, name));
     }
 }
